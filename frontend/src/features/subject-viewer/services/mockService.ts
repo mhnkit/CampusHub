@@ -10,11 +10,11 @@ const subjects: Record<string, Subject> = {
 };
 
 let notes: SubjectNote[] = [
-  { id: "lecture-1", subjectId: "dbms", title: "Lecture 1 — Introduction.pdf", tag: "Lecture", storagePath: null, content: null },
-  { id: "lecture-2", subjectId: "dbms", title: "Lecture 2 — ER Model.pdf", tag: "Lecture", storagePath: null, content: null },
-  { id: "unit-1", subjectId: "dbms", title: "Unit 1 — DBMS Basics.pdf", tag: "Summary", storagePath: null, content: null },
+  { id: "lecture-1", subjectId: "dbms", title: "Lecture 1 — Introduction.pdf", tag: "Lecture / Day wise", storagePath: null, content: null },
+  { id: "lecture-2", subjectId: "dbms", title: "Lecture 2 — ER Model.pdf", tag: "Lecture / Day wise", storagePath: null, content: null },
+  { id: "unit-1", subjectId: "dbms", title: "Unit 1 — DBMS Basics.pdf", tag: "Unit wise", storagePath: null, content: null },
   { id: "pyq-1", subjectId: "dbms", title: "2021 Mid Semester.pdf", tag: "PYQ", storagePath: null, content: null },
-  { id: "my-note-1", subjectId: "dbms", title: "Normalization revision", tag: "My Notes", storagePath: null, content: "# Normalization\n\n- 1NF: atomic values\n- 2NF: no partial dependency\n- 3NF: no transitive dependency" },
+  { id: "my-note-1", subjectId: "dbms", title: "Normalization revision", tag: "Other", storagePath: null, content: "# Normalization\n\n- 1NF: atomic values\n- 2NF: no partial dependency\n- 3NF: no transitive dependency" },
 ];
 
 const pause = () => new Promise((resolve) => setTimeout(resolve, 180));
@@ -30,7 +30,7 @@ export const mockSubjectViewerService: SubjectViewerService = {
   },
   async createTextNote(input: CreateTextNoteInput): Promise<Result<SubjectNote>> {
     await pause();
-    const note: SubjectNote = { id: `note-${Date.now()}`, ...input, tag: "My Notes", storagePath: null };
+    const note: SubjectNote = { id: `note-${Date.now()}`, ...input, tag: "Other", storagePath: null };
     notes = [...notes, note];
     return { data: note, error: null };
   },

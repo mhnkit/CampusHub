@@ -4,16 +4,16 @@ import { Button } from "@/components/ui/button";
 import type { NoteTag, SubjectNote } from "../services";
 
 const groups: { tag: NoteTag; label: string }[] = [
-  { tag: "Lecture", label: "Shared Notes" },
-  { tag: "Summary", label: "Unit wise" },
+  { tag: "Lecture / Day wise", label: "Lecture / Day wise" },
+  { tag: "Unit wise", label: "Unit wise" },
   { tag: "PYQ", label: "PYQs" },
-  { tag: "My Notes", label: "My Notes" },
+  { tag: "Other", label: "Other" },
 ];
 
 interface Props { notes: SubjectNote[]; activeId: string | null; onOpen: (note: SubjectNote) => void; onCreate: () => void; }
 
 export function ResourceTree({ notes, activeId, onOpen, onCreate }: Props) {
-  const [open, setOpen] = useState<Record<string, boolean>>({ Lecture: true, Summary: true, PYQ: true, "My Notes": true });
+  const [open, setOpen] = useState<Record<string, boolean>>({ "Lecture / Day wise": true, "Unit wise": true, PYQ: true, Other: true });
   return <aside className="flex h-full w-60 shrink-0 flex-col border-r bg-card">
     <div className="flex items-center justify-between border-b px-3 py-2.5"><span className="text-sm font-semibold">Resources</span><FolderOpen className="h-4 w-4 text-muted-foreground" /></div>
     <div className="min-h-0 flex-1 overflow-y-auto p-2">

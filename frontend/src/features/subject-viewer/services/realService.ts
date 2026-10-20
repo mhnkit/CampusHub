@@ -13,11 +13,18 @@ export const realSubjectViewerService: SubjectViewerService = {
   async getNotesTree(subjectId): Promise<Result<SubjectNote[]>> {
     const { data, error } = await supabase
       .from("notes")
-      .select("id, subject_id, title, tag, storage_path, content, created_at")
+      .select("id, subject_id, title, tag, storage_path, content, is_shared, is_approved, user_id, created_at")
       .eq("subject_id", subjectId)
       .order("created_at");
     if (error) return { data: null, error: toError(error.message) };
-    const mapped = await Promise.all((data ?? []).map(async (note) => {
+    const { data: auth } = await supabase.auth.getUser();
+    const visibleNotes = (data ?? []).filter((note) => {
+      // Community documents are only surfaced when an admin approved them.
+      if (["Lecture / Day wise", "Unit wise", "PYQ"].includes(note.tag)) return note.is_shared && note.is_approved;
+      // "Other" remains the student's own personal text-note area.
+      return note.tag === "Other" && note.user_id === auth.user?.id;
+    });
+    const mapped = await Promise.all(visibleNotes.map(async (note) => {
       let contentUrl: string | null = null;
       if (note.storage_path) {
         const signed = await supabase.storage.from("subject-notes").createSignedUrl(note.storage_path, 60 * 30);
@@ -31,13 +38,13 @@ export const realSubjectViewerService: SubjectViewerService = {
     const { data: auth } = await supabase.auth.getUser();
     if (!auth.user) return { data: null, error: { code: "UNAUTHENTICATED", message: "Sign in to save personal notes." } };
     const { data, error } = await supabase.from("notes").insert({
-      subject_id: input.subjectId, user_id: auth.user.id, title: input.title, tag: "My Notes", content: input.content, storage_path: "",
+      subject_id: input.subjectId, user_id: auth.user.id, title: input.title, tag: "Other", content: input.content, storage_path: "",
     }).select("id, subject_id, title, tag, storage_path, content, created_at").single();
     if (error) return { data: null, error: toError(error.message) };
     return { data: { id: data.id, subjectId: data.subject_id, title: data.title, tag: data.tag, storagePath: data.storage_path || null, content: data.content, createdAt: data.created_at }, error: null };
   },
   async updateTextNote(noteId, title, content): Promise<Result<SubjectNote>> {
-    const { data, error } = await supabase.from("notes").update({ title, content }).eq("id", noteId).eq("tag", "My Notes")
+    const { data, error } = await supabase.from("notes").update({ title, content }).eq("id", noteId).eq("tag", "Other")
       .select("id, subject_id, title, tag, storage_path, content, created_at").single();
     if (error) return { data: null, error: toError(error.message) };
     return { data: { id: data.id, subjectId: data.subject_id, title: data.title, tag: data.tag, storagePath: data.storage_path || null, content: data.content, createdAt: data.created_at }, error: null };
