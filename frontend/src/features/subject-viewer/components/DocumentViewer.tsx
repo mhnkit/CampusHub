@@ -1,0 +1,12 @@
+import { FileText, Save } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import type { SubjectNote } from "../services";
+
+interface Props { note: SubjectNote | null; title: string; content: string; saving: boolean; onTitle: (value: string) => void; onContent: (value: string) => void; onSave: () => void; }
+export function DocumentViewer({ note, title, content, saving, onTitle, onContent, onSave }: Props) {
+  if (!note) return <div className="flex h-full flex-col items-center justify-center gap-3 text-center text-muted-foreground"><FileText className="h-10 w-10" /><div><p className="font-medium text-foreground">Open a resource to begin</p><p className="text-sm">Choose a PDF or personal note from the resources panel.</p></div></div>;
+  if (note.tag !== "My Notes") return <div className="flex h-full flex-col bg-muted/20"><div className="flex items-center justify-between border-b bg-background px-4 py-2 text-xs text-muted-foreground"><span>{note.title}</span><span>Read-only PDF</span></div>{note.contentUrl ? <iframe className="min-h-0 flex-1 bg-white" src={note.contentUrl} title={note.title} /> : <div className="flex flex-1 flex-col items-center justify-center gap-3 text-center"><FileText className="h-12 w-12 text-primary" /><p className="font-medium text-foreground">{note.title}</p><p className="max-w-sm text-sm text-muted-foreground">This is a read-only PDF resource. Connect Supabase storage to display the uploaded document here.</p></div>}</div>;
+  return <div className="flex h-full flex-col"><div className="flex items-center gap-3 border-b bg-background p-3"><Input value={title} onChange={(event) => onTitle(event.target.value)} aria-label="Note title" className="h-8 max-w-sm text-sm" /><span className="text-xs text-muted-foreground">Personal note · saved to your account</span><Button onClick={onSave} disabled={saving} size="sm" className="ml-auto gap-2"><Save className="h-3.5 w-3.5" />{saving ? "Saving…" : "Save"}</Button></div><Textarea value={content} onChange={(event) => onContent(event.target.value)} placeholder="Start writing your notes…" className="min-h-0 flex-1 resize-none rounded-none border-0 p-5 font-mono text-sm leading-6 shadow-none focus-visible:ring-0" /></div>;
+}

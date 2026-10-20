@@ -14,11 +14,16 @@ CREATE TABLE IF NOT EXISTS public.notes (
     title TEXT NOT NULL,
     description TEXT,
     storage_path TEXT NOT NULL,
+    content TEXT,
     tag TEXT NOT NULL CHECK (tag IN ('Lecture', 'PYQ', 'Summary', 'My Notes')),
     is_shared BOOLEAN NOT NULL DEFAULT false,
     is_approved BOOLEAN NOT NULL DEFAULT false,
     created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())
 );
+
+-- Personal text notes are database-backed editor documents. PDF resources keep
+-- their storage_path; text notes use an empty path and their content column.
+ALTER TABLE public.notes ADD COLUMN IF NOT EXISTS content TEXT;
 
 ALTER TABLE public.notes ENABLE ROW LEVEL SECURITY;
 

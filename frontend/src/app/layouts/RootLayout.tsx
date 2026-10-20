@@ -22,10 +22,10 @@ import { useResizable } from "@/lib/use-resizable";
 import { ResizeHandle } from "@/components/ui/resize-handle";
 
 const subjects: Subject[] = [
-  { id: "cs301", name: "Database Management Systems", code: "CS301" },
-  { id: "cs302", name: "Computer Networks", code: "CS302" },
-  { id: "cs303", name: "Operating Systems", code: "CS303" },
-  { id: "cs304", name: "Design and Analysis of Algorithms", code: "CS304" },
+  { id: "dbms", name: "Database Management Systems", code: "CS301" },
+  { id: "cn", name: "Computer Networks", code: "CS302" },
+  { id: "os", name: "Operating Systems", code: "CS303" },
+  { id: "dsa", name: "Data Structures & Algorithms", code: "CS201" },
 ];
 
 const studentTools = [
@@ -210,7 +210,7 @@ function RootLayoutContent() {
                 >
                   <div className="flex items-center gap-3">
                     <BookOpen className="h-4 w-4 shrink-0" />
-                    <span>Subjects</span>
+                    <span>My Subjects</span>
                   </div>
                   {isSubjectsOpen ? (
                     <ChevronDown className="h-4 w-4 shrink-0 transition-transform text-muted-foreground" />
