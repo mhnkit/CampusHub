@@ -1,6 +1,6 @@
 import { Crepe } from "@milkdown/crepe";
-import "@milkdown/crepe/theme/classic.css";
-import "@milkdown/crepe/theme/nord.css";
+import "@milkdown/crepe/theme/common/style.css";
+import "@milkdown/crepe/theme/frame.css";
 import { useEffect, useRef } from "react";
 
 interface Props {
@@ -19,6 +19,12 @@ export function MilkdownEditor({ initialValue, onChange }: Props) {
     const editor = new Crepe({
       root: rootRef.current,
       defaultValue: initialValue || "# Untitled note\n\nStart writing…",
+      // Crepe's bubble toolbar is enabled by default. CampusHub instead uses
+      // the persistent top bar, which makes heading/bold/list controls visible.
+      features: {
+        [Crepe.Feature.TopBar]: true,
+        [Crepe.Feature.Toolbar]: false,
+      },
       featureConfigs: {
         [Crepe.Feature.Placeholder]: { text: "Start writing your Markdown note…", mode: "block" },
       },
