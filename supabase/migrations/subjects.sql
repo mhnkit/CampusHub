@@ -15,7 +15,7 @@ CREATE TABLE IF NOT EXISTS public.notes (
     description TEXT,
     storage_path TEXT NOT NULL,
     content TEXT,
-    tag TEXT NOT NULL CHECK (tag IN ('Lecture / Day wise', 'Unit wise', 'Other', 'PYQ')),
+    tag TEXT NOT NULL CHECK (tag IN ('Lecture / Day wise', 'Unit wise', 'Other', 'PYQ', 'Private')),
     is_shared BOOLEAN NOT NULL DEFAULT false,
     is_approved BOOLEAN NOT NULL DEFAULT false,
     created_at TIMESTAMPTZ NOT NULL DEFAULT timezone('utc'::text, now())

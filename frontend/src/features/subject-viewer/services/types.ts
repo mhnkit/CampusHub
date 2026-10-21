@@ -1,7 +1,7 @@
 import type { Result } from "@/shared/result";
 import type { Subject } from "@/shared/user";
 
-export type NoteTag = "Lecture / Day wise" | "Unit wise" | "Other" | "PYQ";
+export type NoteTag = "Lecture / Day wise" | "Unit wise" | "Other" | "PYQ" | "Private";
 
 export interface SubjectNote {
   id: string;

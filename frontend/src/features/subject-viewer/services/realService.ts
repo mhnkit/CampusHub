@@ -21,8 +21,8 @@ export const realSubjectViewerService: SubjectViewerService = {
     const visibleNotes = (data ?? []).filter((note) => {
       // Community documents are only surfaced when an admin approved them.
       if (["Lecture / Day wise", "Unit wise", "PYQ"].includes(note.tag)) return note.is_shared && note.is_approved;
-      // "Other" remains the student's own personal text-note area.
-      return note.tag === "Other" && note.user_id === auth.user?.id;
+      // "Private" remains the student's own personal text-note area.
+      return note.tag === "Private" && note.user_id === auth.user?.id;
     });
     const mapped = await Promise.all(visibleNotes.map(async (note) => {
       let contentUrl: string | null = null;
@@ -38,13 +38,13 @@ export const realSubjectViewerService: SubjectViewerService = {
     const { data: auth } = await supabase.auth.getUser();
     if (!auth.user) return { data: null, error: { code: "UNAUTHENTICATED", message: "Sign in to save personal notes." } };
     const { data, error } = await supabase.from("notes").insert({
-      subject_id: input.subjectId, user_id: auth.user.id, title: input.title, tag: "Other", content: input.content, storage_path: "",
+      subject_id: input.subjectId, user_id: auth.user.id, title: input.title, tag: "Private", content: input.content, storage_path: "",
     }).select("id, subject_id, title, tag, storage_path, content, created_at").single();
     if (error) return { data: null, error: toError(error.message) };
     return { data: { id: data.id, subjectId: data.subject_id, title: data.title, tag: data.tag, storagePath: data.storage_path || null, content: data.content, createdAt: data.created_at }, error: null };
   },
   async updateTextNote(noteId, title, content): Promise<Result<SubjectNote>> {
-    const { data, error } = await supabase.from("notes").update({ title, content }).eq("id", noteId).eq("tag", "Other")
+    const { data, error } = await supabase.from("notes").update({ title, content }).eq("id", noteId).eq("tag", "Private")
       .select("id, subject_id, title, tag, storage_path, content, created_at").single();
     if (error) return { data: null, error: toError(error.message) };
     return { data: { id: data.id, subjectId: data.subject_id, title: data.title, tag: data.tag, storagePath: data.storage_path || null, content: data.content, createdAt: data.created_at }, error: null };
